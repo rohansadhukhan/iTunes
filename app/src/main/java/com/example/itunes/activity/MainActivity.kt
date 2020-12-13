@@ -2,80 +2,74 @@ package com.example.itunes.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.GenericTransitionOptions.with
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Glide.with
 import com.example.itunes.R
 import com.example.itunes.adapter.SongAdapter
-import com.example.itunes.api.ApiService
-import com.example.itunes.model.Artist
 import com.example.itunes.model.Result
-import com.squareup.picasso.Picasso
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.itunes.viewmodel.SearchViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
-    val BASE_URL : String = "https://itunes.apple.com/"
-    private lateinit var searchText : EditText
-    private lateinit var recyclerView : RecyclerView
     private var SongList : List<Result> = ArrayList<Result>()
+
+    // View Models
+    private lateinit var viewModel : SearchViewModel
+
+    // Recycler View
+    private lateinit var recyclerView : RecyclerView
+    private lateinit var adapter : SongAdapter
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        return super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu, menu)
+        val searchItem = menu?.findItem(R.id.search_icon)
+        val searchView = searchItem?.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    viewModel.searchArtist(query)
+                }
+                return true
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.search_icon -> {
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        getArtists()
-
-        searchText = findViewById(R.id.search)
-        recyclerView = findViewById(R.id.recyclerview)
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.setHasFixedSize(true)
-
-    }
-
-    private fun getArtists() {
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(ApiService::class.java)
-        val call = service.getArtists("arijit")
-        call.enqueue(object : Callback<Artist> {
-            override fun onResponse(call: Call<Artist>, response: Response<Artist>) {
-                if(!response.isSuccessful) {
-                    Toast.makeText(this@MainActivity, response.code(), Toast.LENGTH_SHORT).show()
-                    return;
-                }
-                Toast.makeText(this@MainActivity, "Done", Toast.LENGTH_SHORT).show()
-//                SongList = ArrayList<Result>()
-                for(result in response.body()?.result!!) {
-//                    Toast.makeText(this@MainActivity, result.trackName, Toast.LENGTH_SHORT).show()
-                    SongList += result
-                }
-                recyclerView.adapter = SongAdapter(SongList)
-
-            }
-
-            override fun onFailure(call: Call<Artist>, t: Throwable) {
-                Toast.makeText(this@MainActivity, t.message, Toast.LENGTH_SHORT).show()
-            }
-
+        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
+        viewModel.SongList.observe(this, androidx.lifecycle.Observer {
+            Log.d("My", it.size.toString())
+            adapter.updateSongList(it)
         })
 
+        recyclerView = findViewById(R.id.recyclerview)
+        adapter = SongAdapter(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+        recyclerView.setHasFixedSize(true)
     }
 }

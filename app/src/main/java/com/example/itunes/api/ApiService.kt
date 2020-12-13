@@ -5,6 +5,9 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+
+const val BASE_URL : String = "https://itunes.apple.com/"
+
 interface ApiService {
 
     @GET("search")

@@ -10,14 +10,39 @@
 
         <ImageView
             android:id="@+id/song_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="60dp"
+            android:layout_height="60dp"/>
 
-        <TextView
-            android:id="@+id/song_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/song_img"/>
+            android:orientation="vertical"
+            android:layout_toEndOf="@+id/song_img"
+            android:layout_toStartOf="@+id/fav_img"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+            <TextView
+                android:id="@+id/song_name"
+                android:text="Song Name"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/artist_name"
+                android:text="Artist Name"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
 
     </RelativeLayout>
 
