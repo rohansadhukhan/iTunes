@@ -1,6 +1,6 @@
-package com.example.itunes.model
+package com.example.itunes.view.model
 
-import com.example.itunes.model.Result
+import com.example.itunes.view.model.Result
 import com.google.gson.annotations.SerializedName
 
 data class Artist (
