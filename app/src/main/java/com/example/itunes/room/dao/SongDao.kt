@@ -2,6 +2,7 @@ package com.example.itunes.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.example.itunes.room.entity.FavouriteSong
 import com.example.itunes.view.model.Result
 
 @Dao
@@ -21,5 +22,15 @@ interface SongDao {
 
     @Query("DELETE FROM song_table")
     fun deleteAll()
+
+    @Query("SELECT * FROM song_table ORDER BY trackName ASC")
+    fun getAllSongASC() : LiveData<List<Result>>
+
+    @Query("SELECT * FROM song_table ORDER BY trackName DESC")
+    fun getAllSongDESC() : LiveData<List<Result>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertInToFavourite(songList : List<FavouriteSong>?)
+
 
 }

@@ -37,6 +37,14 @@ class SearchRepository(val application: Application) {
         DeleteAllAsyncTask(database).execute()
     }
 
+    fun getAllSongASC(): LiveData<List<Result>>? {
+        return database.songDao().getAllSongASC()
+    }
+
+    fun getAllSongDESC(): LiveData<List<Result>>? {
+        return database.songDao().getAllSongDESC()
+    }
+
     class InsertAsyncTask(songDatabase: SongDatabase) : AsyncTask<List<Result>?, Void?, Void>() {
         private val songDao: SongDao = songDatabase.songDao()
         override fun doInBackground(vararg params: List<Result>?): Void? {
@@ -83,6 +91,7 @@ class SearchRepository(val application: Application) {
                 Toast.makeText(application, t.message, Toast.LENGTH_SHORT).show()
             }
         })
+
     }
 
 }

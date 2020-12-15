@@ -37,4 +37,12 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         repository.setDatabase()
     }
 
+    fun getAllSavedSongASC() : LiveData<List<Result>>? {
+        return repository.getAllSongASC()
+    }
+
+    fun getAllSavedSongDESC() : LiveData<List<Result>>? {
+        return repository.getAllSongDESC()
+    }
+
 }

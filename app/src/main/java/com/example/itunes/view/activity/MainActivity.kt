@@ -1,13 +1,11 @@
 package com.example.itunes.view.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +18,8 @@ import com.example.itunes.viewmodel.SearchViewModel
 class MainActivity : AppCompatActivity(), SongAdapter.onItemClickListener {
 
     private var SongList: ArrayList<Result> = ArrayList<Result>()
+
+    private var MEDIA_URL : String? = null
 
     // View Models
     private lateinit var viewModel: SearchViewModel
@@ -54,6 +54,30 @@ class MainActivity : AppCompatActivity(), SongAdapter.onItemClickListener {
             R.id.search_icon -> {
                 true
             }
+            R.id.favourites -> {
+                true
+            }
+            R.id.order_by_name_asc -> {
+                viewModel.getAllSavedSongASC()?.observe(this, Observer {
+                    SongList = it as ArrayList<Result>
+                    adapter.updateSongList(it)
+                })
+                true
+            }
+            R.id.order_by_name_desc -> {
+                viewModel.getAllSavedSongDESC()?.observe(this, Observer {
+                    SongList = it as ArrayList<Result>
+                    adapter.updateSongList(it)
+                })
+                true
+            }
+            R.id.undo -> {
+                viewModel.SongList?.observe(this, Observer {
+                    SongList = it as ArrayList<Result>
+                    adapter.updateSongList(it)
+                })
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -69,10 +93,6 @@ class MainActivity : AppCompatActivity(), SongAdapter.onItemClickListener {
             adapter.updateSongList(it)
         })
 
-//        viewModel.SongList?.observe(this, Observer {
-//            this.SongList = it
-//        })
-
         recyclerView = findViewById(R.id.recyclerview)
         adapter = SongAdapter(this, this)
 
@@ -84,7 +104,25 @@ class MainActivity : AppCompatActivity(), SongAdapter.onItemClickListener {
     override fun onItemClicked(position: Int) {
 //        Toast.makeText(this, SongList.size.toString(), Toast.LENGTH_SHORT).show()
         var song : Result = SongList[position]
-//        Toast.makeText(this@MainActivity, "clicked " + position + " " + song.artistName, Toast.LENGTH_SHORT).show()
-        viewModel.deleteSong(song)
+        Toast.makeText(this@MainActivity, "clicked " + position + " " + song.artistName, Toast.LENGTH_SHORT).show()
+//        viewModel.deleteSong(song)
+//        handleMediaPlayer(SongList[position]?.trackViewUrl!!)
+    }
+
+    fun handleMediaPlayer(url : String) {
+        val player : android.media.MediaPlayer = android.media.MediaPlayer()
+        MEDIA_URL = url
+        try {
+            player.setDataSource("https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview114/v4/42/51/bd/4251bd94-a533-fe0e-8bd3-c20178e4c7e9/mzaf_16464829143727885423.plus.aac.p.m4a")
+            player.prepare()
+        } catch (e : Exception) {
+            Log.d("tag", e.message.toString())
+        }
+
+        if(player.isPlaying == true || url == MEDIA_URL) {
+            player.pause()
+        } else {
+            player?.start()
+        }
     }
 }
