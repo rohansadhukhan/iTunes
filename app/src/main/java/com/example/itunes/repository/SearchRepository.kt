@@ -10,6 +10,7 @@ import com.example.itunes.api.ApiService
 import com.example.itunes.api.RetrofitService
 import com.example.itunes.room.dao.SongDao
 import com.example.itunes.room.databse.SongDatabase
+import com.example.itunes.room.entity.FavouriteSong
 import com.example.itunes.view.model.Artist
 import com.example.itunes.view.model.Result
 import retrofit2.Call
@@ -80,10 +81,10 @@ class SearchRepository(val application: Application) {
                 else {
                     Toast.makeText(application, "Successful APi call", Toast.LENGTH_SHORT).show()
                     SongList?.value = response.body()?.result
-                    Log.d("tag", "pre setDatabase")
+//                    Log.d("tag", "pre setDatabase")
                     setDatabase()
                     insert(SongList?.value)
-                    Log.d("tag", "post setDatabase")
+//                    Log.d("tag", "post setDatabase")
                 }
             }
 

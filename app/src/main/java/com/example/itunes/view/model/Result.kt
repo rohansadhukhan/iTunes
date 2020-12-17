@@ -104,7 +104,9 @@ data class Result(
     @SerializedName("isStreamable")
     val isStreamable: Boolean,
 
-    ) : Serializable {
+    var isFav: Boolean = false
+
+    ) {
 
 
 

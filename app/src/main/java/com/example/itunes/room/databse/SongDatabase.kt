@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.itunes.room.dao.SongDao
 import com.example.itunes.view.model.Result
 
-@Database(entities = [Result::class], version = 2, exportSchema = false)
+@Database(entities = [Result::class], version = 3, exportSchema = false)
 public abstract class SongDatabase : RoomDatabase() {
 
     abstract fun songDao(): SongDao
@@ -20,7 +20,6 @@ public abstract class SongDatabase : RoomDatabase() {
         fun getInstance(context: Context): SongDatabase {
             synchronized(this) {
                 var instance = INSTANCE
-
                 if (instance == null) {
                     instance = databaseBuilder(
                         context.applicationContext,

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.itunes.view.model.Result
 import com.example.itunes.repository.SearchRepository
+import com.example.itunes.room.entity.FavouriteSong
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
 

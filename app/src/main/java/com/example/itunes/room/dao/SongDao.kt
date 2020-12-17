@@ -11,9 +11,6 @@ interface SongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(songList : List<Result>?)
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(song : Result)
-
     @Delete
     fun delete(song : Result?)
 
@@ -28,9 +25,5 @@ interface SongDao {
 
     @Query("SELECT * FROM song_table ORDER BY trackName DESC")
     fun getAllSongDESC() : LiveData<List<Result>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertInToFavourite(songList : List<FavouriteSong>?)
-
 
 }
