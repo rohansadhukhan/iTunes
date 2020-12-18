@@ -1,1 +1,1 @@
-This is a music player application . I have used MVVM architecture , Retrofit to fetch data from internet , Room database to store all the songs in it and which is also used for ofline query and AsyncTask to work in background.
+This is a music player application . I have used MVVM architecture , Retrofit to fetch data from internet , Room database to store all the songs in it and which is also used for offline query and AsyncTask to work in background.
